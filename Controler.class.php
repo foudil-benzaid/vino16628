@@ -23,7 +23,7 @@ class Controler
 			// Si le paramètre est envoyé
 			if (isset($_REQUEST['requete'])) {
 			
-				switch ($_GET['requete']) {
+				switch ($_REQUEST['requete']) {
 					case 'listeBouteille':
 						$this->listeBouteille();
 						break;
