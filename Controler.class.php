@@ -34,6 +34,10 @@ class Controler
 				case 'ajouterBouteilleCellier':
 					$this->ajouterBouteilleCellier();
 					break;
+				case 'modifierBouteilleCellier':
+					$id = $_GET["id"];
+					$this->modifierBouteilleCellier($id);
+					break;
 				case 'boireBouteilleCellier':
 					$this->boireBouteilleCellier();
 					break;
