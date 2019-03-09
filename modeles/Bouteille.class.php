@@ -185,6 +185,27 @@ class Bouteille extends Modele {
         
 		return $res;
 	}
+
+	/**
+	 * Fonction de sauvegarde des données de la bouteille cellier
+	 * 
+	 * @param $id id de la bouteille cellier
+	 * @param $dateachat date d'achat de la bouteille cellier
+	 * @param $notes notes
+	 * @param $quantite quantités
+	 * @param $Garde à garder jusqu'à ? (date)
+	 * @param $prix prix
+	 * @param $mille millesime
+ 	 */
+	private function sauvegardeModifierCellier($id, $dateachat, $notes, $quantite, $Garde, $prix, $mille)
+	{
+		$bte = new Bouteille();
+		// Faire appel à la fonction de sauvegarde des données
+		$data = $bte->sauvegarderModife($id, $dateachat, $notes, $quantite, $Garde, $prix, $mille);
+		// Afficher l'accueil
+		$this->accueil();
+           
+	}
 }
 
 
