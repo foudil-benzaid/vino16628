@@ -206,6 +206,23 @@ class Bouteille extends Modele {
 		$this->accueil();
            
 	}
+
+	 
+	/**
+	 * Fonction RecupererCellierParId Pour récupérer les détails d'un cellier par son id 
+	 * 
+	 * @param $id id de la bouteille cellier
+	 * @return $row détails d'un cellier
+	 */
+	public function RecupererCellierParId($id)
+	{
+				
+		$requete = "SELECT * FROM vino__cellier  WHERE id = ". $id;
+		$res = $this->_db->query($requete);
+        $row = $res->fetch_assoc(); 	
+		return $row;
+	
+	}
 }
 
 
