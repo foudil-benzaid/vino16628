@@ -131,6 +131,22 @@ class Controler
 			$resultat = $bte->recupererQuantite($body->id);
 			echo json_encode($resultat);
 		}
+
+		/**
+		 * Fonction modifier cellier
+		 * 
+		 * @param $id id de la bouteille cellier
+		 */
+		private function modifierBouteilleCellier($id)
+		{	
+			$bte = new Bouteille();
+			// Récupérer la bouteille par id
+			$data = $bte->RecupererCellierParId($id);
+            include("vues/entete.php");
+            // Afficher la vue modifier
+			include("vues/modifier.php");
+			include("vues/pied.php");       
+		}
 		
 }
 ?>
