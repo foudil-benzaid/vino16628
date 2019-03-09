@@ -148,6 +148,16 @@ class Controler
 			include("vues/pied.php");       
 		}
 		
+		private function sauvegardeModifierCellier($id, $dateachat, $notes, $quantite, $Garde, $prix, $mille)
+		{
+			$bte = new Bouteille();
+			// Faire appel à la fonction de sauvegarde
+			$data = $bte->sauvegarderModife($id, $dateachat, $notes, $quantite, $Garde, $prix, $mille);
+			// Afficher l'accueil
+			$this->accueil();
+               
+		}
+		
 		
 }
 ?>
