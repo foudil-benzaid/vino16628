@@ -223,6 +223,27 @@ class Bouteille extends Modele {
 		return $row;
 	
 	}
+
+	
+	/**
+	 * Fonction sauvegarderModife Pour souvgrader les modification sur le cellier
+	 * 
+	 * @param $id id de la bouteille cellier
+	 * @param $dateachat date d'achat de la bouteille cellier
+	 * @param $notes notes
+	 * @param $quantite quantités
+	 * @param $Garde à garder jusqu'à ? (date)
+	 * @param $prix prix
+	 * @param $mille millesime
+ 	 */
+	public function sauvegarderModife($id, $dateachat, $notes, $quantite, $Garde, $prix, $mille)
+	{
+		
+		$requete = "UPDATE vino__cellier SET quantite = $quantite ,  date_achat = '$dateachat' ,  notes = '$notes',  garde_jusqua = $Garde ,  prix = $prix,  millesime = $mille WHERE id = $id";
+		//echo $requete;
+        $res = $this->_db->query($requete);
+       	
+	}
 }
 
 
