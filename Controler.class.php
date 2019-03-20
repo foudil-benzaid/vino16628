@@ -32,6 +32,10 @@ class Controler
 						$this->listeBouteille();
 						break;
 
+					case 'bouteilleParId':
+						$this->bouteilleParId();
+						break;
+
 					case 'autocompleteBouteille':
 						$this->autocompleteBouteille();
 						break;
@@ -64,8 +68,16 @@ class Controler
 						$this->accueil();
 						break;
 
+					case 'cellierParid':
+						$this->cellierParid();
+						break;
+
 					case 'bouteilleParCellier':
 						$this->bouteilleParCellier($_REQUEST['id']);
+						break;
+
+					case 'ajouterCellier':
+						$this->ajouterCellier($_REQUEST['nomCellier']);
 						break;
 
 					case 'importer':
@@ -85,10 +97,22 @@ class Controler
 
 							$this->sauvegardeModifierCellier($_POST['id'], $_POST['nom'], $_POST['date_achat'], $_POST['notes'], $_POST['quantite'], $_POST['garde_jusqua'], $_POST['prix_saq'], $_POST['pays'], $_POST['millesime'], $_POST['description'], $_POST['type'], $_POST['format']);
 						}
+						break;
+
+					case 'sauvegarderBouteilleCellier':
+						// Tester si les paramêtres sont envoyés
+						if (isset($_REQUEST['cellier'],$_REQUEST['bouteille'],$_REQUEST['quantite'], $_REQUEST['date_achat'] )){
+
+							$this->sauvegarderBouteilleCellier($_REQUEST['cellier'], $_REQUEST['bouteille'], $_REQUEST['quantite'], $_REQUEST['date_achat'],$_REQUEST['notes'] );
+						}
 						break;	
 
 					case 'boireBouteilleCellier':
 						$this->boireBouteilleCellier();
+						break;
+
+					case 'retirerBouteilleCellier':
+						$this->retirerBouteilleCellier();
 						break;
 
 					case "Login":
@@ -180,6 +204,20 @@ class Controler
             echo json_encode($cellier);
                   
 		}
+
+		/**
+		* Fonction d'affichage des détails d'une bouteille par id
+		* 
+		*/
+		private function bouteilleParId()
+		{
+			$bte = new Bouteille();
+			$body = json_decode(file_get_contents('php://input'));
+			$Bouteille = $bte->bouteilleParId($body->id);
+            
+            echo json_encode($Bouteille);
+                  
+		}
 		
 		/**
 		* Fonction d'auto-completion
@@ -210,8 +248,11 @@ class Controler
 			}
 			else{
 				$bte = new Bouteille();
-				// $data = $bte->RecupererBouteilleParCellier($id);
+				// Récupérer la liste des celliers par usager
 				$data = $bte->CellierParUsager($_SESSION["UserID"] );
+				// Récupérer la liste des bouteilles
+				$dat = $bte->getListeBouteille();
+
 				include("vues/entete.php");
 				include("vues/ajouter.php");
 				include("vues/pied.php");
@@ -292,6 +333,21 @@ class Controler
 		}
 
 		/**
+		* Fonction sauvegarder bouteille dans un cellier
+		* 
+		* @param $cellier_id id du cellier
+		* @param $bouteille_id id de la bouteille
+		*/
+		private function sauvegarderBouteilleCellier($cellier_id, $bouteille_id,$quantite, $date_achat, $notes)
+		{
+			$bte = new Bouteille();
+			// Faire appel à la fonction de sauvegarde
+			$data = $bte->sauvegarderBouteilleCellier($cellier_id, $bouteille_id, $quantite, $date_achat, $notes);
+			// Afficher l'accueil
+			$this->accueil();
+		}
+
+		/**
 		* Fonction de modification d'une bouteille dans un cellier
 		* 
 		* @param $idUsager id de l'usager
@@ -304,6 +360,7 @@ class Controler
             $cellier = new Bouteille();
             // Récupérer les cellier par usager authentifié
             $dat['cellier'] = $cellier->CellierParUsager($idUsager);
+            $dat['nomCellier'] = $cellier->cellierParId($id=1);
 			include("vues/entete.php");
 			include("vues/cellier.php");
 			include("vues/pied.php");
@@ -320,6 +377,8 @@ class Controler
 			$bte = new Bouteille();
 			$data = $bte->RecupererBouteilleParCellier($id);
 			$dat['cellier'] = $bte->CellierParUsager($_SESSION["UserID"] );
+			$dat['nomCellier'] = $bte->cellierParId($id);
+			
 			include("vues/entete.php");
 			include("vues/cellier.php");
 			include("vues/pied.php");
@@ -339,6 +398,63 @@ class Controler
 			include("vues/entete.php");
 			include("vues/ajouter.php");
 			include("vues/pied.php");
+		}
+
+		/**
+		* Fonction d'ajout d'un cellier
+		* 
+		* @param $nomCellier le nom du cellier
+		*/
+		private function ajouterCellier($nomCellier)
+		{
+			// $body = json_decode(file_get_contents('php://input'));
+			$bte = new Bouteille();
+			$existe = $bte->chercherCellier($nomCellier);
+			
+			if ($existe ==null)  {
+				$data = $bte->sauvegarderCellier($nomCellier, $_SESSION['UserID']);
+				
+			}
+			else
+    		{
+    			$messageErreur = "Un cellier portant ce nom existe déjà !";
+    			
+    		}
+			$dat['cellier'] = $bte->CellierParUsager($_SESSION["UserID"] );
+			// $dat['cellier'] = $bte->CellierParUsager($_SESSION["UserID"] );
+			include("vues/entete.php");
+			include("vues/cellier.php");
+			include("vues/pied.php");
+		}
+
+		/**
+		* Fonction d'ajout d'une bouteille dans le cellier
+		* 
+		* @return $resultat Sous format json
+		*/
+		private function cellierParid()
+		{
+			$body = json_decode(file_get_contents('php://input'));
+			
+			$bte = new Bouteille();
+			$resultat = $bte->cellierParId($body->id);
+			
+			echo json_encode($resultat);
+		}
+
+		/**
+		* Fonction d'ajout d'une bouteille dans le cellier
+		* 
+		* @return $resultat Sous format json
+		*/
+		private function retirerBouteilleCellier()
+		{
+			$body = json_decode(file_get_contents('php://input'));
+			
+			$bte = new Bouteille();
+			$resultat = $bte->retirerBouteilleCellier($body->id);
+			
+			echo ($resultat);
 		}
 
 		

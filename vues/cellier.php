@@ -3,17 +3,41 @@
 <div class="container-fluid">
 <div class="row">
     <!-- Sidebar -->
-    <div class="col-md-3 col-sm-4 sidebar1 bg-danger">
+    <div class="col-md-3 col-sm-4 sidebar1 bg-dark">
         <br>
-        <div class="left-navigation">
-            <button class="collapsible">Mes celliers</button>
+        <div class="left-navigation"> 
+            <button class="collapsible bg-dark" ><i class="fas fa-wine-bottle"></i> Mes celliers</button>
             <div class="content">
+                <br>
+                <!-- Formulaire d'ajout d'un cellier -->
+                <form method="GET">
+                    <div class="form-row">
+                        <div class="form-group col-md-10">
+                            <input type="text" name="nomCellier" class="form-control" placeholder="Nom du cellier" required>
+                            <input type="hidden" name="requete" value="ajouterCellier">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <button type="submit" class="btn btn-outline-danger" title="Ajouter un cellier"><i class="fas fa-plus"></i></button>
+                        </div>
+
+                        <br>
+                        <?php 
+                        if(isset($messageErreur))
+                            echo "<p>$messageErreur</p>";
+                        ?>
+                        
+                    </div>
+                </form>
+
                 <ul class="list-group list-group-flush">
+
+                <span  class="bg-dark text-light">Liste des celliers :</span>
 
             <?php foreach ($dat['cellier'] as $key => $cellier) { 
                 $id =$cellier['id'];
             ?>
-                <li class="list-group-item"><a id="<?php echo $cellier['id'] ?>" href="<?php echo '?requete=bouteilleParCellier&id='.$id.'#cellier' ?>"><?php echo $cellier['nom'] ?></a></li>
+
+                <li class="list-group-item"><a class="lienCellier" data-id='<?php echo $cellier['id'] ?>' id="<?php echo $cellier['id'] ?>" href="<?php echo '?requete=bouteilleParCellier&id='.$id.'#cellier' ?>"><?php echo $cellier['nom'] ?></a></li>
             <?php } ?>
             </ul>
             </div>
@@ -22,8 +46,8 @@
             if ($_SESSION['admin'] =='oui') {
                 
             ?>
-            <button class="collapsible">Importation</button>
-            <div class="content">
+            <button class="collapsible bg-dark"><i class="fas fa-file-import"></i> Importation</button>
+            <div class="content ">
                 <br>
                 <div class="form-row">
                     <div class="form-group col-md-6">
@@ -37,7 +61,7 @@
                 </div>
                 <div class="form-row">
                     <div class="option form-group col-md-2">
-                        <button id="btnImport" class="btn btn-danger">Importer</button>
+                        <button id="btnImport" class="btn btn-outline-danger">Importer</button>
                     </div>
                 </div>
              
@@ -50,9 +74,19 @@
     </div>
     <!-- /#sidebar-wrapper -->
     <div class="col-md-9 main-content" id="cellier">
+        
+        <h1 class="border border-secondary bg-dark text-light"><?php 
+        if (isset($dat['nomCellier'])) {
+            # code...
+        
+        echo $dat['nomCellier']['nomCellier'] ;
+        }
+        ?></h1>
+        <!-- <p id="monCellier"><?php echo $dat['nomCellier']['nomCellier'] ?></p> -->
+
                 <?php
-                    // Tester si le cellier n'est pas vide
-                    if (count($data) !=0) {
+                    
+                    if (!empty($data)) {
                     
                     // Parcourir le tableau data
                     foreach ($data as $cle => $bouteille) {
@@ -85,6 +119,8 @@
                                             <button class="btnModifier btn btn-sm btn-outline-danger">Modifier</button>
                                             <button class='btnAjouter btn btn-sm btn-outline-danger'>Ajouter</button>
                                             <button class='btnBoire btn btn-sm btn-outline-danger'>Boire</button>
+                                            <button class='btnRetirer btn btn-sm btn-outline-danger' title="Retirer cette bouteille"><i class="fas fa-trash-alt"></i></button>
+                                            
 
                                         </div>
                                     

@@ -82,14 +82,15 @@ class Usager extends Modele {
 					vino_bouteille.format,
 					vino_bouteille.garde_jusqua,
 					vino_bouteille.millesime,
-					vino_contient.quantite,
-					vino_contient.date_achat,
-					vino_contient.notes,
+					vino_bouteille.quantite,
+					vino_bouteille.date_achat,
+					vino_bouteille.notes,
 					vino_type.type 
-        			from vino_cellier 
-        			JOIN vino_contient ON vino_cellier.id=vino_contient.cellier_id 
-        			JOIN vino_bouteille ON vino_contient.bouteille_id=vino_bouteille.id 
+        			from vino_bouteille 
+        			JOIN vino_cellier ON vino_bouteille.cellier_id=vino_cellier.id 
         			JOIN vino_type ON vino_type.id = vino_bouteille.type_id 
+        			JOIN vino_usagers ON vino_usagers.id=vino_cellier.usager_id 
+
         			WHERE vino_cellier.usager_id = ".$idUsager;
  
 		if(($res = $this->_db->query($requete)) ==	 true)
